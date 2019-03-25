@@ -1,28 +1,40 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+import styled from 'styled-components';
+import client from './client/contentful';
+
+import Article from './Article';
+
+const Main = styled.main`
+  padding: 80px 16px;
+  padding-top: 0;
+  > h1 {
+    font-size: 8vw;
   }
-}
+`;
 
-export default App;
+export default () => {
+  const [blogs, setBlogs] = useState([]);
+  const fetchData = async () => client.getEntries({
+    content_type: 'blogPost',
+  })
+    .then((entries) => {
+      setBlogs(entries.items);
+    });
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <Router>
+      <Main>
+        <h1>My Thing, Engineering,  Philosophy, or Business</h1>
+        {blogs.map(blog => (
+          <li key={blog.sys.id}><Link to={`/${blog.sys.id}`}>{blog.fields.title}</Link></li>
+        ))}
+      </Main>
+      <div style={{ maxWidth: '640px', margin: 'auto' }}><Route path="/:id" component={Article} /></div>
+    </Router>
+  );
+};
