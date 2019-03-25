@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Route, Link, Switch,
+} from 'react-router-dom';
 
 import styled from 'styled-components';
 import Helmet from 'react-helmet';
@@ -15,6 +17,9 @@ const Main = styled.main`
     font-size: 8vw;
   }
 `;
+
+const Home = () => <p>Select Article.</p>;
+const NoMatch = () => <p>No Match.</p>;
 
 export default () => {
   const [blogs, setBlogs] = useState([]);
@@ -35,11 +40,15 @@ export default () => {
         <Main>
           <h1>My Thing, Engineering,  Philosophy, or Business</h1>
           {blogs.map(blog => (
-            <li key={blog.sys.id}><Link to={`/${blog.sys.id}`}>{blog.fields.title}</Link></li>
+            <li key={blog.sys.id}><Link to={`/article/${blog.sys.id}`}>{blog.fields.title}</Link></li>
           ))}
         </Main>
         <div style={{ maxWidth: '640px', margin: 'auto' }}>
-          <Route path="/:id" component={Article} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/article/:id" component={Article} />
+            <Route component={NoMatch} />
+          </Switch>
         </div>
       </Router>
     </>

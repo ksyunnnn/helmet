@@ -31,9 +31,9 @@ export default ({ match }) => {
           { name: 'twitter:title', content: 'Home' },
           { name: 'twitter:description', content: blog.description },
           { name: 'twitter:image', content: blog.heroImage ? blog.heroImage.fields.file.url : null },
-          { property: 'og:title', content: 'Home' },
+          { property: 'og:title', content: `${blog.title} | article` },
           { property: 'og:type', content: 'website' },
-          { property: 'og:url', content: `/${id}` },
+          { property: 'og:url', content: `/article/${id}` },
           { property: 'og:image', content: blog.heroImage ? blog.heroImage.fields.file.url : null },
           { property: 'og:description', content: blog.description },
         ]}
